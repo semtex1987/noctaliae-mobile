@@ -1,24 +1,24 @@
-# 🚀 GUIDE DE DÉPLOIEMENT NOCTALIÆ
+# 🚀 NOCTALIÆ DEPLOYMENT GUIDE
 
-Ce guide couvre tous les aspects du déploiement de Noctaliæ, du développement local à la production sur Google Play Store.
+This guide covers all aspects of deploying Noctaliæ, from local development to production on the Google Play Store.
 
 ---
 
-## 📋 TABLE DES MATIÈRES
+## 📋 TABLE OF CONTENTS
 
-1. [Prérequis](#prérequis)
-2. [Environnement Local](#environnement-local)
+1. [Prerequisites](#prerequisites)
+2. [Local Environment](#local-environment)
 3. [Backend (Infomaniak)](#backend-infomaniak)
-4. [Build Android](#build-android)
+4. [Android Build](#android-build)
 5. [Google Play Store](#google-play-store)
 6. [Monitoring](#monitoring)
 7. [Troubleshooting](#troubleshooting)
 
 ---
 
-## 🔧 PRÉREQUIS
+## 🔧 PREREQUISITES
 
-### Outils nécessaires
+### Required tools
 
 ```bash
 # Node.js 20+
@@ -30,85 +30,85 @@ npm --version
 # Expo CLI
 npm install -g expo-cli
 
-# EAS CLI (pour les builds)
+# EAS CLI (for builds)
 npm install -g eas-cli
 
 # Git
 git --version
 ```
 
-### Comptes requis
+### Required accounts
 
-- ✅ **Expo** : https://expo.dev (gratuit)
-- ✅ **Google Play Console** : https://play.google.com/console (25$ one-time)
-- ⚠️ **Sentry** : https://sentry.io (optionnel, 5K errors/mois gratuit)
-- ⚠️ **Amplitude** : https://amplitude.com (optionnel, 10M events/mois gratuit)
-- ✅ **Infomaniak** : Hébergement backend (déjà actif)
+- ✅ **Expo** : https://expo.dev (free)
+- ✅ **Google Play Console** : https://play.google.com/console ($25 one-time)
+- ⚠️ **Sentry** : https://sentry.io (optional, 5K errors/month free)
+- ⚠️ **Amplitude** : https://amplitude.com (optional, 10M events/month free)
+- ✅ **Infomaniak** : Backend hosting (already active)
 
 ---
 
-## 💻 ENVIRONNEMENT LOCAL
+## 💻 LOCAL ENVIRONMENT
 
 ### 1. Clone & Installation
 
 ```bash
-# Clone le repo
+# Clone the repo
 git clone https://github.com/tm-ai0/noctaliae-mobile.git
 cd noctaliae-mobile
 
-# Installe les dépendances
+# Install dependencies
 npm install
 
-# Crée le fichier .env
+# Create the .env file
 cp .env.example .env
 ```
 
-### 2. Configuration .env
+### 2. .env Configuration
 
 ```env
 # Backend API
 API_BASE_URL=https://api.thomasmaury.fr
 
-# Monitoring (optionnel en dev)
+# Monitoring (optional in development)
 SENTRY_DSN=
 AMPLITUDE_API_KEY=
 
-# Premium (à venir)
+# Premium (coming soon)
 STRIPE_PUBLISHABLE_KEY=
 ```
 
-### 3. Lancer l'app en développement
+### 3. Run the app in development
 
 ```bash
-# Lancer Metro bundler
+# Start the Metro bundler
 npm start
 
-# Lancer sur Android
+# Run on Android
 npm run android
 
-# Lancer sur Android avec cache clear
+# Run on Android with the cache cleared
 npm run start:clear
 ```
 
-### 4. Tester sur un vrai appareil
+### 4. Test on a real device
 
-#### Option A : Expo Go (rapide, limité)
+#### Option A : Expo Go (fast, limited)
 
 ```bash
 npm start
-# Scanner le QR code avec Expo Go app
+# Scan the QR code with the Expo Go app
 ```
 
-⚠️ **Limitation** : Ne fonctionne pas avec `expo-av` (enregistrement audio)
+⚠️ **Limitation** : Does not work with `expo-av` (audio recording)
 
-#### Option B : Development Build (recommandé)
+#### Option B : Development Build (recommended)
 
 ```bash
-# Créer un development build
+# Create a development build
 eas build --platform android --profile development
 
-# Installer l'APK sur ton téléphone
-# Puis lancer:
+# Install the APK on your phone
+# Then run:
 npm start --dev-client
 ```
 
@@ -116,63 +116,63 @@ npm start --dev-client
 
 ## 🌐 BACKEND (INFOMANIAK)
 
-### État actuel
+### Current status
 
-- ✅ Backend v2.2 déployé sur `https://api.thomasmaury.fr`
-- ✅ Endpoints fonctionnels (transcription, analyse, chat)
-- ✅ Rate limiting actif (100 req/h par IP)
-- ✅ Toutes clés API configurées (Claude, Groq, OpenAI)
+- ✅ Backend v2.2 deployed at `https://api.thomasmaury.fr`
+- ✅ Working endpoints (transcription, analysis, chat)
+- ✅ Rate limiting enabled (100 req/h per IP)
+- ✅ All API keys configured (Claude, Groq, OpenAI)
 
-### Fichiers backend
+### Backend files
 
 ```
 BACKEND_V2.2_INFOMANIAK/
-├── index.js           # Fichier principal
-├── .env              # Variables d'environnement (sur Infomaniak)
-└── package.json      # Dépendances
+├── index.js           # Main file
+├── .env              # Environment variables (on Infomaniak)
+└── package.json      # Dependencies
 ```
 
-### Mettre à jour le backend
+### Update the backend
 
-#### Via FileZilla (méthode actuelle)
+#### Via FileZilla (current method)
 
-1. **Connecte-toi à Infomaniak FTP**
+1. **Connect to Infomaniak FTP**
    - Host: `ftp.infomaniak.com`
-   - Username: ton username Infomaniak
-   - Password: ton password Infomaniak
+   - Username: your Infomaniak username
+   - Password: your Infomaniak password
 
-2. **Navigate vers**
+2. **Navigate to**
    ```
    ~/sites/api.thomasmaury.fr/
    ```
 
-3. **Backup l'ancien fichier**
+3. **Back up the old file**
    ```
-   Renomme: index.js → index.js.backup-YYYYMMDD
+   Rename: index.js → index.js.backup-YYYYMMDD
    ```
 
-4. **Upload le nouveau**
+4. **Upload the new one**
    ```
    Upload: BACKEND_V2.2_INFOMANIAK/index.js
    ```
 
-5. **Redémarre l'app**
-   - Va dans le panneau Infomaniak
-   - Section "Node.js"
-   - Clique sur "Redémarrer l'application"
+5. **Restart the app**
+   - Go to the Infomaniak control panel
+   - "Node.js" section
+   - Click "Restart application"
 
-6. **Vérifie**
+6. **Verify**
    ```bash
    curl https://api.thomasmaury.fr/health
-   # Devrait retourner: {"status":"ok","version":"2.2"}
+   # Should return: {"status":"ok","version":"2.2"}
    ```
 
-#### Variables d'environnement backend
+#### Backend environment variables
 
-Les variables sont configurées directement sur Infomaniak (pas de fichier .env uploadé) :
+The variables are configured directly on Infomaniak (no .env file uploaded) :
 
 ```env
-# API Keys (déjà configurées sur Infomaniak)
+# API Keys (already configured on Infomaniak)
 ANTHROPIC_API_KEY=sk-ant-xxxxx
 GROQ_API_KEY=gsk_xxxxx
 OPENAI_API_KEY=sk-xxxxx
@@ -184,173 +184,173 @@ NODE_ENV=production
 
 ---
 
-## 📱 BUILD ANDROID
+## 📱 ANDROID BUILD
 
-### Types de builds
+### Build types
 
-1. **Development** : Pour tester avec hot reload
-2. **Preview** : APK à partager (beta testers)
-3. **Production** : AAB pour Google Play Store
+1. **Development** : For testing with hot reload
+2. **Preview** : APK to share (beta testers)
+3. **Production** : AAB for the Google Play Store
 
-### Build Preview (APK)
+### Preview Build (APK)
 
 ```bash
-# Premier build (configure EAS)
+# First build (configure EAS)
 eas build:configure
 
-# Login Expo
+# Log in to Expo
 eas login
 
 # Build APK
 eas build --platform android --profile preview
 
-# Le build prend 10-15 min
-# Tu reçois un lien pour télécharger l'APK
+# The build takes 10-15 min
+# You receive a link to download the APK
 ```
 
-### Build Production (AAB)
+### Production Build (AAB)
 
 ```bash
-# Build AAB pour Play Store
+# Build AAB for the Play Store
 eas build --platform android --profile production
 
-# Le build génère un .aab
-# Télécharge-le pour l'uploader sur Play Store
+# The build generates an .aab
+# Download it to upload it to the Play Store
 ```
 
-### Configurer le keystore (première fois)
+### Configure the keystore (first time)
 
-EAS gère automatiquement le keystore. Si tu veux le réutiliser :
+EAS manages the keystore automatically. If you want to reuse it :
 
 ```bash
-# Télécharge le keystore
+# Download the keystore
 eas credentials
 
-# Sauvegarde-le dans un endroit sûr
-# Tu en auras besoin pour les mises à jour
+# Save it somewhere safe
+# You will need it for updates
 ```
 
 ---
 
 ## 🏪 GOOGLE PLAY STORE
 
-### Première publication (pas encore fait)
+### First release (not done yet)
 
-#### 1. Créer l'app sur Play Console
+#### 1. Create the app on Play Console
 
-1. Va sur https://play.google.com/console
-2. Clique sur "Créer une application"
-3. Remplis les infos :
-   - **Nom** : Noctaliæ
-   - **Langue par défaut** : Français
-   - **Type** : Application
-   - **Gratuite/Payante** : Gratuite
+1. Go to https://play.google.com/console
+2. Click "Create app"
+3. Fill in the details :
+   - **Name** : Noctaliæ
+   - **Default language** : French
+   - **Type** : App
+   - **Free/Paid** : Free
 
-#### 2. Remplir la fiche
+#### 2. Complete the listing
 
-**Fiche du Store**
-- Titre (30 char max) : `Noctaliæ - Analyse de Rêves`
-- Description courte (80 char) : `Analysez vos rêves avec l'IA et les neurosciences`
-- Description complète (4000 char max) :
+**Store Listing**
+- Title (30 chars max) : `Noctaliæ - Dream Analysis`
+- Short description (80 chars) : `Analyze your dreams with AI and neuroscience`
+- Full description (4000 chars max) :
 
 ```
-Noctaliæ vous aide à comprendre vos rêves grâce à l'intelligence artificielle et aux neurosciences.
+Noctaliæ helps you understand your dreams through artificial intelligence and neuroscience.
 
-🧠 ANALYSE SCIENTIFIQUE
-Basée sur les travaux d'Isabelle Arnulf (Institut du Cerveau), nos analyses utilisent les dernières avancées en neurosciences du rêve.
+🧠 SCIENTIFIC ANALYSIS
+Based on the work of Isabelle Arnulf (Paris Brain Institute), our analyses use the latest advances in dream neuroscience.
 
-🎙️ ENREGISTREMENT VOCAL
-Enregistrez vos rêves au réveil, quand ils sont encore frais dans votre mémoire.
+🎙️ VOICE RECORDING
+Record your dreams when you wake up, while they are still fresh in your memory.
 
-🤖 IA AVANCÉE
-Deux modèles d'IA pour analyser vos rêves :
-- Claude Sonnet 4.5 (analyse approfondie)
-- Llama 3.3 70B (analyse rapide)
+🤖 ADVANCED AI
+Two AI models to analyze your dreams :
+- Claude Sonnet 4.5 (in-depth analysis)
+- Llama 3.3 70B (quick analysis)
 
-💬 CONVERSATION APPROFONDIE
-Posez des questions sur vos rêves, explorez leur signification en profondeur.
+💬 IN-DEPTH CONVERSATION
+Ask questions about your dreams and explore their meaning in depth.
 
-🎨 INTERFACE ÉLÉGANTE
-Design moderne inspiré de la nuit, avec plusieurs thèmes personnalisables.
+🎨 ELEGANT INTERFACE
+Modern, night-inspired design with several customizable themes.
 
-🔒 CONFIDENTIALITÉ
-Vos rêves restent sur votre appareil. Aucune synchronisation cloud par défaut.
+🔒 PRIVACY
+Your dreams stay on your device. No cloud synchronization by default.
 ```
 
-**Captures d'écran requises**
-- 2 captures téléphone minimum (1080x1920 ou 1080x2340)
-- 1 icône d'app haute résolution (512x512)
-- 1 bannière (1024x500) optionnelle
+**Required screenshots**
+- At least 2 phone screenshots (1080x1920 or 1080x2340)
+- 1 high-resolution app icon (512x512)
+- 1 optional banner (1024x500)
 
-#### 3. Catégorisation
+#### 3. Categorization
 
-- **Catégorie** : Santé et forme
-- **Tags** : Rêves, IA, Neurosciences, Journal intime
-- **Public cible** : 13+
-- **Contenu** :
-  - ❌ Annonces : Non
-  - ❌ Achats intégrés : Non (pour l'instant)
-  - ✅ Collecte de données : Oui (analytics optionnel)
+- **Category** : Health & Fitness
+- **Tags** : Dreams, AI, Neuroscience, Personal journal
+- **Target audience** : 13+
+- **Content** :
+  - ❌ Ads : No
+  - ❌ In-app purchases : No (for now)
+  - ✅ Data collection : Yes (optional analytics)
 
-#### 4. Conformité
+#### 4. Compliance
 
-**Politique de confidentialité**
-- Tu dois créer une page de politique de confidentialité
-- Héberge-la sur https://thomasmaury.fr/noctaliae/privacy
-- Ajoute l'URL dans Play Console
+**Privacy policy**
+- You must create a privacy policy page
+- Host it at https://thomasmaury.fr/noctaliae/privacy
+- Add the URL in Play Console
 
-**Exemple de contenu minimal** :
+**Example of minimal content** :
 
 ```markdown
-# Politique de Confidentialité - Noctaliæ
+# Privacy Policy - Noctaliæ
 
-Dernière mise à jour : [Date]
+Last updated : [Date]
 
-## Données collectées
+## Data collected
 
-- **Enregistrements audio** : Stockés localement sur votre appareil
-- **Transcriptions** : Envoyées à notre serveur pour analyse, puis supprimées
-- **Analyses IA** : Stockées localement sur votre appareil
+- **Audio recordings** : Stored locally on your device
+- **Transcriptions** : Sent to our server for analysis, then deleted
+- **AI analyses** : Stored locally on your device
 
-## Données partagées
+## Data shared
 
-Nous n'envoyons vos données qu'aux services suivants pour le fonctionnement de l'app :
-- OpenAI (transcription Whisper)
-- Anthropic (analyse Claude)
-- Groq (analyse Llama)
+We only send your data to the following services to operate the app :
+- OpenAI (Whisper transcription)
+- Anthropic (Claude analysis)
+- Groq (Llama analysis)
 
-## Vos droits
+## Your rights
 
-Vous pouvez supprimer toutes vos données à tout moment depuis l'app.
+You can delete all your data at any time from within the app.
 
 ## Contact
 
 contact@thomasmaury.fr
 ```
 
-#### 5. Upload de l'AAB
+#### 5. Upload the AAB
 
 ```bash
-# Build production
+# Production build
 eas build --platform android --profile production
 
-# Une fois le build terminé, télécharge le .aab
+# Once the build is complete, download the .aab
 
 # Upload via Play Console
 # Production > Releases > Create new release
-# Upload l'AAB
+# Upload the AAB
 ```
 
-#### 6. Tests internes
+#### 6. Internal testing
 
-Avant la publication publique, fais des tests internes :
+Before the public release, conduct internal testing :
 
-1. Crée une liste de testeurs (toi + quelques amis)
-2. Upload l'AAB en "Internal Testing"
-3. Teste pendant quelques jours
-4. Fix les bugs
-5. Passe en "Open Testing" (beta publique)
-6. Enfin, passe en "Production"
+1. Create a list of testers (you + a few friends)
+2. Upload the AAB to "Internal Testing"
+3. Test for a few days
+4. Fix bugs
+5. Move to "Open Testing" (public beta)
+6. Finally, move to "Production"
 
 ---
 
@@ -361,27 +361,27 @@ Avant la publication publique, fais des tests internes :
 #### Setup
 
 ```bash
-# Installe Sentry
+# Install Sentry
 npm install @sentry/react-native
 
 # Configure
 npx @sentry/wizard -i reactNative -p android
 ```
 
-#### Obtenir le DSN
+#### Get the DSN
 
-1. Va sur https://sentry.io
-2. Crée un projet "Noctaliæ"
-3. Copie le DSN : `https://xxxxx@xxxxx.ingest.sentry.io/xxxxx`
-4. Ajoute-le dans `.env` :
+1. Go to https://sentry.io
+2. Create a "Noctaliæ" project
+3. Copy the DSN : `https://xxxxx@xxxxx.ingest.sentry.io/xxxxx`
+4. Add it to `.env` :
    ```env
    SENTRY_DSN=https://xxxxx@xxxxx.ingest.sentry.io/xxxxx
    ```
 
-#### Tester
+#### Test
 
 ```typescript
-// Force une erreur pour tester
+// Force an error to test
 import { captureError } from '@/config/sentry.config';
 
 throw new Error('Test Sentry');
@@ -392,21 +392,21 @@ throw new Error('Test Sentry');
 #### Setup
 
 ```bash
-# Installe Amplitude
+# Install Amplitude
 npm install @amplitude/analytics-react-native
 ```
 
-#### Obtenir l'API Key
+#### Get the API Key
 
-1. Va sur https://amplitude.com
-2. Crée un projet "Noctaliæ"
-3. Copie l'API Key
-4. Ajoute-la dans `.env` :
+1. Go to https://amplitude.com
+2. Create a "Noctaliæ" project
+3. Copy the API Key
+4. Add it to `.env` :
    ```env
    AMPLITUDE_API_KEY=xxxxx
    ```
 
-#### Tracker des events
+#### Track events
 
 ```typescript
 import { Analytics } from '@/config/analytics.config';
@@ -419,48 +419,48 @@ Analytics.analysisCompleted('claude-sonnet-4', 5.2, 'deep');
 
 ## 🐛 TROUBLESHOOTING
 
-### Problème 1 : "Unable to resolve module"
+### Problem 1 : "Unable to resolve module"
 
 ```bash
 # Clear cache
 npm start -- --clear
 
-# Ou
+# Or
 npx expo start -c
 
-# Ou
+# Or
 rm -rf node_modules
 npm install
 ```
 
-### Problème 2 : Build EAS échoue
+### Problem 2 : EAS build fails
 
 ```bash
-# Vérifie les logs
+# Check the logs
 eas build:list
 
-# Vérifie la config
+# Check the config
 eas build:configure
 
-# Nettoie et rebuild
+# Clean and rebuild
 eas build --platform android --profile preview --clear-cache
 ```
 
-### Problème 3 : Backend ne répond pas
+### Problem 3 : Backend is not responding
 
 ```bash
-# Vérifie le health check
+# Check the health check
 curl https://api.thomasmaury.fr/health
 
-# Si erreur 502/503 → Redémarre l'app sur Infomaniak
+# If error 502/503 → Restart the app on Infomaniak
 
-# Si erreur 429 → Rate limit dépassé, attends 1h
+# If error 429 → Rate limit exceeded, wait 1h
 ```
 
-### Problème 4 : Audio ne s'enregistre pas
+### Problem 4 : Audio is not recording
 
 ```bash
-# Vérifie les permissions dans app.json
+# Check the permissions in app.json
 {
   "android": {
     "permissions": [
@@ -470,63 +470,63 @@ curl https://api.thomasmaury.fr/health
   }
 }
 
-# Rebuild l'app
+# Rebuild the app
 eas build --platform android --profile development
 ```
 
-### Problème 5 : TypeScript errors
+### Problem 5 : TypeScript errors
 
 ```bash
 # Check types
 npx tsc --noEmit
 
-# Si trop d'erreurs, migration progressive :
-# Renomme juste les fichiers .js → .ts
-# Ajoute // @ts-nocheck en haut
-# Fix progressivement
+# If there are too many errors, migrate gradually :
+# Just rename the files .js → .ts
+# Add // @ts-nocheck at the top
+# Fix gradually
 ```
 
 ---
 
-## ✅ CHECKLIST DE DÉPLOIEMENT
+## ✅ DEPLOYMENT CHECKLIST
 
-### Avant chaque release
+### Before each release
 
-- [ ] Tests passent : `npm test`
+- [ ] Tests pass : `npm test`
 - [ ] TypeScript OK : `npx tsc --noEmit`
-- [ ] Build local fonctionne : `npm run android`
+- [ ] Local build works : `npm run android`
 - [ ] Backend health check OK : `curl https://api.thomasmaury.fr/health`
-- [ ] Version incrémentée dans `app.json`
-- [ ] Changelog mis à jour
-- [ ] Screenshots à jour (si changements UI)
+- [ ] Version incremented in `app.json`
+- [ ] Changelog updated
+- [ ] Screenshots up to date (if UI changes)
 
-### Build Preview (Beta)
+### Preview Build (Beta)
 
 - [ ] `eas build --platform android --profile preview`
-- [ ] Télécharge l'APK
-- [ ] Teste sur plusieurs appareils
-- [ ] Partage avec beta testers
-- [ ] Collecte feedback
+- [ ] Download the APK
+- [ ] Test on multiple devices
+- [ ] Share with beta testers
+- [ ] Collect feedback
 
-### Build Production (Play Store)
+### Production Build (Play Store)
 
-- [ ] Tous les bugs beta fixés
+- [ ] All beta bugs fixed
 - [ ] `eas build --platform android --profile production`
-- [ ] Upload AAB sur Play Console
-- [ ] Remplis release notes
-- [ ] Soumets pour review Google (1-3 jours)
-- [ ] Une fois approuvé, déploie progressivement (10% → 50% → 100%)
+- [ ] Upload AAB to Play Console
+- [ ] Fill in release notes
+- [ ] Submit for Google review (1-3 days)
+- [ ] Once approved, roll out gradually (10% → 50% → 100%)
 
 ---
 
 ## 📞 SUPPORT
 
-Si tu as des questions :
+If you have questions :
 
 - **Email** : contact@thomasmaury.fr
 - **GitHub Issues** : https://github.com/tm-ai0/noctaliae-mobile/issues
-- **Documentation** : Voir `ARCHITECTURE.md` et `TESTING.md`
+- **Documentation** : See `ARCHITECTURE.md` and `TESTING.md`
 
 ---
 
-**Dernière mise à jour : 21/11/2025**
+**Last updated : 21/11/2025**
